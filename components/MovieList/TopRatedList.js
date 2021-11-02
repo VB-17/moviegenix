@@ -13,7 +13,7 @@ function TopRatedList() {
     >
       <QueryResult loading={isLoading} error={error} data={data}>
         {data &&
-          data?.map((item) => (
+          data.map((item) => (
             <ListItem key={item.id} item={item} variant="secondary" />
           ))}
       </QueryResult>

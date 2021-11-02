@@ -11,7 +11,7 @@ const sidebarData = [
   },
   {
     href: "/discover",
-    label: "Dicover",
+    label: "Discover",
     icon: FiCompass,
   },
   {
