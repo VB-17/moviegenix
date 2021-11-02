@@ -1,3 +1,4 @@
+const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
   mode: "jit",
   purge: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
@@ -31,12 +32,11 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ["Poppins", "sans-serif"],
+        sans: ["Poppins", ...defaultTheme.fontFamily.sans],
       },
       backgroundImage: {
         "list-gradient": "linear-gradient(90deg, transparent 90%, #64748b)",
       },
-    
     },
   },
   variants: {
