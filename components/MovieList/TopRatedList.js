@@ -12,9 +12,10 @@ function TopRatedList() {
       description={"All the movies which are rated the highest on the charts"}
     >
       <QueryResult loading={isLoading} error={error} data={data}>
-        {data?.map((item) => (
-          <ListItem key={item.id} item={item} variant="secondary" />
-        ))}
+        {data &&
+          data?.map((item) => (
+            <ListItem key={item.id} item={item} variant="secondary" />
+          ))}
       </QueryResult>
     </List>
   );

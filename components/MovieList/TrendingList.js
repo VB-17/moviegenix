@@ -12,9 +12,7 @@ function TrendingList() {
       description={"All the movies which are trending this current week"}
     >
       <QueryResult loading={isLoading} error={error} data={data}>
-        {data?.map((item) => (
-          <ListItem key={item.id} item={item} />
-        ))}
+        {data && data?.map((item) => <ListItem key={item.id} item={item} />)}
       </QueryResult>
     </List>
   );

@@ -51,8 +51,8 @@ function MovieInfo({ movieId }) {
     <div>
       <QueryResult loading={isLoading} error={error} data={data}>
         {data && (
-          <div className="grid gap-20 grid-cols-8">
-            <div className="relative h-[28rem] overflow-hidden rounded-3xl shadow-lg col-span-2">
+          <div className="flex gap-20">
+            <div className="relative flex-[0.28] h-[30rem] overflow-hidden rounded-3xl shadow-lg col-span-2">
               <Image
                 src={
                   data.poster_path
@@ -65,7 +65,7 @@ function MovieInfo({ movieId }) {
                 objectPosition="center"
               />
             </div>
-            <div className="flex w-10/12 flex-col space-y-5 col-span-6">
+            <div className="flex-[0.6] flex w-10/12 flex-col space-y-5 col-span-6">
               <div className="flex justify-between">
                 <h1 className="text-4xl font-semibold text-gray-200">
                   {data.title}
