@@ -116,9 +116,10 @@ function MovieInfo({ movieId }) {
       <div className="mt-24">
         <List title={"Recommended Movies"}>
           <QueryResult loading={isLoading} error={error} data={data}>
-            {data?.recommended.map((item) => (
-              <ListItem key={item.id} item={item} variant="secondary" />
-            ))}
+            {data &&
+              data?.recommended.map((item) => (
+                <ListItem key={item.id} item={item} variant="secondary" />
+              ))}
           </QueryResult>
         </List>
       </div>
