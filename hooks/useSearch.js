@@ -1,11 +1,14 @@
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { searchMovies } from "../lib/requests";
+import { useGenres } from "./useGenres";
 
 import { queryClient } from "../lib/query-client";
 
 export function useSearch(query) {
-  let data = undefined;
+  let data;
+  let genresData;
+
   const {
     data: searchData,
     isLoading,
@@ -15,12 +18,18 @@ export function useSearch(query) {
     enabled: Boolean(query),
   });
 
-  console.log(searchData);
+  const { data: freshGenres } = useGenres();
 
   if (searchData) {
-    const genresData = queryClient.getQueryData("genres");
+    genresData = queryClient.getQueryData("genres");
+
+    if (!genresData) {
+      genresData = freshGenres;
+    }
+
     const modifiedData = searchData.map(
       ({
+        id,
         title,
         backdrop_path,
         release_date,
@@ -28,9 +37,9 @@ export function useSearch(query) {
         genre_ids,
         vote_average,
         vote_count,
-        overview
+        overview,
       }) => {
-        const release_year = release_date.split("-")[0];
+        const release_year = release_date?.split("-")[0];
         const genres = [];
 
         genre_ids.forEach((genreId) => {
@@ -42,6 +51,7 @@ export function useSearch(query) {
         });
 
         return {
+          id,
           title,
           backdrop_path,
           poster_path,

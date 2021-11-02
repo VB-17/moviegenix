@@ -1,19 +1,29 @@
 import { useQuery } from "react-query";
 import { queryClient } from "../lib/query-client";
 import { getTopRatedMovies } from "../lib/requests";
+import { useGenres } from "./useGenres";
 
 export function useTopRatedMovies() {
   let data = [];
+  let genresData = [];
+
   const {
     data: topRatedData,
     isLoading,
     error,
   } = useQuery("top-rated", getTopRatedMovies);
 
+  const { data: freshGenres } = useGenres();
+
   if (topRatedData) {
-    const genresData = queryClient.getQueryData("genres");
+    genresData = queryClient.getQueryData("genres");
+
+    if (!genresData) {
+      genresData = freshGenres;
+    }
     const modifiedData = topRatedData.map(
       ({
+        id,
         title,
         backdrop_path,
         release_date,
@@ -35,6 +45,7 @@ export function useTopRatedMovies() {
         });
 
         return {
+          id,
           title,
           backdrop_path,
           poster_path,

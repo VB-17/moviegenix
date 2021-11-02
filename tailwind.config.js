@@ -36,6 +36,7 @@ module.exports = {
       backgroundImage: {
         "list-gradient": "linear-gradient(90deg, transparent 90%, #64748b)",
       },
+    
     },
   },
   variants: {

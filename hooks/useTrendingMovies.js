@@ -37,6 +37,7 @@ export function useTrendingMovies() {
   if (trendingData && genresData) {
     const modifiedData = trendingData.map(
       ({
+        id,
         title,
         backdrop_path,
         release_date,
@@ -57,6 +58,7 @@ export function useTrendingMovies() {
         });
 
         return {
+          id,
           title,
           backdrop_path,
           poster_path,

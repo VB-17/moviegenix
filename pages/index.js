@@ -4,7 +4,7 @@ import TopRatedList from "../components/MovieList/TopRatedList";
 
 export default function Home() {
   return (
-    <section className="p-10">
+    <section>
       <SearchSection />
       <TrendingList />
       <TopRatedList />
