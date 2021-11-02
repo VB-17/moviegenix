@@ -44,8 +44,8 @@ export function useSearch(query) {
 
         genre_ids.forEach((genreId) => {
           const genreName = genresData
-            .map(({ id, name }) => id === genreId && name)
-            .filter(Boolean);
+            ?.map(({ id, name }) => id === genreId && name)
+            ?.filter(Boolean);
 
           genres.push(genreName[0]);
         });

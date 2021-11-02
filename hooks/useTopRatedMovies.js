@@ -17,6 +17,7 @@ export function useTopRatedMovies() {
 
   if (topRatedData) {
     genresData = queryClient.getQueryData("genres");
+    console.log(genresData)
 
     if (!genresData) {
       genresData = freshGenres;
@@ -38,8 +39,8 @@ export function useTopRatedMovies() {
 
         genre_ids.forEach((genreId) => {
           const genreName = genresData
-            .map(({ id, name }) => id === genreId && name)
-            .filter(Boolean);
+            ?.map(({ id, name }) => id === genreId && name)
+            ?.filter(Boolean);
 
           genres.push(genreName[0]);
         });

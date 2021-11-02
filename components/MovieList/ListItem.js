@@ -1,3 +1,4 @@
+
 import { IMAGE_BASE } from "../../lib/constants";
 import { AiFillStar } from "react-icons/ai";
 

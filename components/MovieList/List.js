@@ -12,7 +12,6 @@ function List({ title, description, children }) {
         <div className="flex scrollbar-hide overflow-x-auto space-x-8">
           {children}
         </div>
-        {/* <div className="absolute top-0 right-0 h-full rounded-br-3xl w-32 bg-gradient-to-r from-transparent to-gray-400"></div> */}
       </div>
     </div>
   );
