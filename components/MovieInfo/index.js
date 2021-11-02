@@ -18,7 +18,7 @@ function MovieInfo({ movieId }) {
   const [isBookmarked, setIsBookmarked] = useState(() => {
     try {
       const isPresent =
-        bookmarkList.findIndex((movie) => movie.id === Number(movieId)) !== -1;
+        bookmarkList?.findIndex((movie) => movie.id === Number(movieId)) !== -1;
       return isPresent;
     } catch (err) {
       console.log(err);
