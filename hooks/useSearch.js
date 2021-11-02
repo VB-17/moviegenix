@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { searchMovies } from "../lib/requests";
 import { useGenres } from "./useGenres";
@@ -7,7 +7,7 @@ import { queryClient } from "../lib/query-client";
 
 export function useSearch(query) {
   let data;
-  let genresData;
+  const [genresData, setGenresData] = useState([]);
 
   const {
     data: searchData,
@@ -20,13 +20,22 @@ export function useSearch(query) {
 
   const { data: freshGenres } = useGenres();
 
-  if (searchData) {
-    genresData = queryClient.getQueryData("genres");
-
-    if (!genresData) {
-      genresData = freshGenres;
+  useEffect(() => {
+    if (queryClient.getQueryData("genres")) {
+      setGenresData(queryClient.getQueriesData("genres"));
     }
+    setGenresData(freshGenres);
+  }, [freshGenres]);
 
+  useEffect(() => {
+    if (!query) {
+      return;
+    } else {
+      refetch();
+    }
+  }, [query]);
+
+  if (searchData) {
     const modifiedData = searchData.map(
       ({
         id,
@@ -65,14 +74,6 @@ export function useSearch(query) {
     );
     data = [...modifiedData];
   }
-
-  useEffect(() => {
-    if (!query) {
-      return;
-    } else {
-      refetch();
-    }
-  }, [query]);
 
   return { data, isLoading, error };
 }

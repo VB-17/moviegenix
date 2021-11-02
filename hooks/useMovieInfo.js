@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useGenres } from "./useGenres";
 import { queryClient } from "../lib/query-client";
@@ -7,7 +7,8 @@ import { getMovieDetail, getSimilarMovies } from "../lib/requests";
 
 export function useMovieInfo(movieId) {
   let info = {};
-  let genresData;
+  const [genresData, setGenresData] = useState([]);
+  const { data: freshGenres } = useGenres();
 
   const movieInfo = useQuery(
     ["movie", movieId],
@@ -24,7 +25,12 @@ export function useMovieInfo(movieId) {
     }
   );
 
-  const { data: freshGenres } = useGenres();
+  useEffect(() => {
+    if (queryClient.getQueryData("genres")) {
+      setGenresData(queryClient.getQueriesData("genres"));
+    }
+    setGenresData(freshGenres);
+  }, [freshGenres]);
 
   if (movieInfo.isLoading || similarMovieInfo.isLoading) {
     info = { data: null, isLoading: true, error: null };
@@ -44,12 +50,6 @@ export function useMovieInfo(movieId) {
   }
 
   if (movieInfo.data && similarMovieInfo.data) {
-    genresData = queryClient.getQueryData("genres");
-
-    if (!genresData) {
-      genresData = freshGenres;
-    }
-
     const modifiedData = similarMovieInfo.data.map(
       ({
         id,
@@ -81,7 +81,6 @@ export function useMovieInfo(movieId) {
           vote_count,
           vote_average,
           genres,
-          isBookmarked: false,
         };
       }
     );
