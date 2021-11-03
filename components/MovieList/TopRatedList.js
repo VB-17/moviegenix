@@ -1,7 +1,6 @@
 import { useTopRatedMovies } from "../../hooks/useTopRatedMovies";
-import QueryResult from "../QueryResult";
+import ListSlider from "./ListSlider";
 
-import List from "./List";
 import ListItem from "./ListItem";
 
 function TopRatedList() {
@@ -9,17 +8,17 @@ function TopRatedList() {
   const { data, isLoading, error } = topRated;
 
   return (
-    <List
+    <ListSlider
       title={"Top Rated"}
       description={"All the movies which are rated the highest on the charts"}
+      queryInfo={topRated}
+      slidePerPage={4.5}
     >
-      <QueryResult loading={isLoading} error={error} data={data}>
-        {data &&
-          data.map((item) => (
-            <ListItem key={item.id} item={item} variant="secondary" />
-          ))}
-      </QueryResult>
-    </List>
+      {data &&
+        data.map((item) => (
+          <ListItem key={item.id} item={item} variant="secondary" />
+        ))}
+    </ListSlider>
   );
 }
 

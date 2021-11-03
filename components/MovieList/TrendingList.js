@@ -1,20 +1,21 @@
 import { useTrendingMovies } from "../../hooks/useTrendingMovies";
-import QueryResult from "../QueryResult";
 
-import List from "./List";
 import ListItem from "./ListItem";
+import ListSlider from "./ListSlider";
 
 function TrendingList() {
-  const { data, isLoading, error } = useTrendingMovies();
+  const trending = useTrendingMovies();
+  const { data } = trending;
+
   return (
-    <List
+    <ListSlider
       title={"Trending Now"}
       description={"All the movies which are trending this current week"}
+      queryInfo={trending}
+      slidePerPage={3.5}
     >
-      <QueryResult loading={isLoading} error={error} data={data}>
-        {data && data.map((item) => <ListItem key={item.id} item={item} />)}
-      </QueryResult>
-    </List>
+      {data && data.map((item) => <ListItem key={item.id} item={item} />)}
+    </ListSlider>
   );
 }
 

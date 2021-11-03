@@ -9,11 +9,13 @@ import QueryResult from "../QueryResult";
 import Image from "next/image";
 import Link from "next/link";
 import ListItem from "../MovieList/ListItem";
-import List from "../MovieList/List";
 import { useEffect, useState } from "react";
+import ListSlider from "../MovieList/ListSlider";
 
 function MovieInfo({ movieId }) {
-  const { data, isLoading, error } = useMovieInfo(movieId);
+  const movieInfo = useMovieInfo(movieId);
+  const { data, isLoading, error } = movieInfo;
+
   const [bookmarkList, setBookmarkList] = useLocalStorage("bookmarks", []);
   const [isBookmarked, setIsBookmarked] = useState(() => {
     try {
@@ -114,14 +116,16 @@ function MovieInfo({ movieId }) {
       </QueryResult>
 
       <div className="mt-24">
-        <List title={"Recommended Movies"}>
-          <QueryResult loading={isLoading} error={error} data={data}>
-            {data &&
-              data.recommended?.map((item) => (
-                <ListItem key={item.id} item={item} variant="secondary" />
-              ))}
-          </QueryResult>
-        </List>
+        <ListSlider
+          title={"Recommended Movies"}
+          queryInfo={movieInfo}
+          slidePerPage={4.5}
+        >
+          {data &&
+            data.recommended?.map((item) => (
+              <ListItem key={item.id} item={item} variant="secondary" />
+            ))}
+        </ListSlider>
       </div>
     </div>
   );
