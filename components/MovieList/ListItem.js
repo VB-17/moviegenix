@@ -11,7 +11,7 @@ function ListItem({ item, variant = "primary" }) {
 
   switch (variant) {
     case "primary":
-      textWidth = "w-10/12";
+      textWidth = "w-96";
       cardDimensions = "h-64 w-96";
       imageSrc = item.backdrop_path
         ? `${IMAGE_BASE}${item.backdrop_path}`
