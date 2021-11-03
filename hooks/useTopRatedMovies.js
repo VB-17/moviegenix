@@ -1,67 +1,43 @@
-import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { queryClient } from "../lib/query-client";
 import { getTopRatedMovies } from "../lib/requests";
+import { getGenreNamesFromIds } from "../lib/utils";
 import { useGenres } from "./useGenres";
 
 export function useTopRatedMovies() {
-  const [data, setData] = useState([]);
-  const [genresData, setGenresData] = useState([]);
+  const {
+    data: genresData,
+    isLoading: genresLoading,
+    error: genresError,
+  } = useGenres();
 
   const {
-    data: topRatedData,
-    isLoading,
-    error,
-  } = useQuery("top-rated", getTopRatedMovies);
+    data: topRated,
+    isLoading: topRatedLoading,
+    error: topRatedError,
+  } = useQuery("top-rated", () => getTopRatedMovies(), {
+    enabled: Boolean(genresData),
+    select: (data) => {
+      return data.map((item) => {
+        let genres = [];
+        const cachedGenres = queryClient.getQueryData("genres");
+        const release_year = item.release_date.split("-")[0];
+        if (cachedGenres) {
+          genres = getGenreNamesFromIds(item, cachedGenres);
+        }
 
-  const { data: freshGenres, refetch } = useGenres();
+        genres = getGenreNamesFromIds(item, genresData);
+        return { ...item, genres, release_year };
+      });
+    },
+  });
 
-  useEffect(() => {
-    if (queryClient.getQueryData("genres")) {
-      setGenresData(queryClient.getQueriesData("genres"));
-    }
-    setGenresData(freshGenres);
-  }, [freshGenres]);
-
-  if (topRatedData) {
-    const modifiedData = topRatedData.map(
-      ({
-        id,
-        title,
-        backdrop_path,
-        release_date,
-        poster_path,
-        genre_ids,
-        vote_average,
-        vote_count,
-        overview,
-      }) => {
-        const release_year = release_date.split("-")[0];
-        const genres = [];
-
-        genre_ids.forEach((genreId) => {
-          const genreName = genresData
-            ?.map(({ id, name }) => id === genreId && name)
-            ?.filter(Boolean);
-
-          genres.push(genreName[0]);
-        });
-
-        return {
-          id,
-          title,
-          backdrop_path,
-          poster_path,
-          release_year,
-          vote_count,
-          vote_average,
-          overview,
-          genres,
-        };
-      }
-    );
-    data = [...modifiedData];
-  }
-
-  return { data, isLoading, error };
+  return {
+    data: topRated,
+    isLoading: topRatedLoading || genresLoading,
+    error: {
+      topRated: topRatedError ? topRatedError.message : null,
+      genres: genresError ? genresError.message : null,
+    },
+  };
 }

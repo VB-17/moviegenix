@@ -3,7 +3,7 @@ import ListItem from "../components/MovieList/ListItem";
 import QueryResult from "../components/QueryResult";
 import SearchSection from "../components/Search/SearchSection";
 import { useDiscoverData } from "../hooks/useDiscoverData";
-import { genreDetails } from "../lib/utils";
+import { genreDetails } from "../lib/constants";
 
 function Discover() {
   const [currentGenreID, setCurrentGenreID] = useState(1);

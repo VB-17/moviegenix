@@ -2,30 +2,37 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { searchMovies } from "../lib/requests";
 import { useGenres } from "./useGenres";
-
+import { getGenreNamesFromIds } from "../lib/utils";
 import { queryClient } from "../lib/query-client";
 
 export function useSearch(query) {
-  let data;
-  const [genresData, setGenresData] = useState([]);
+  const {
+    data: genresData,
+    isLoading: genresLoading,
+    error: genresError,
+  } = useGenres();
 
   const {
     data: searchData,
-    isLoading,
-    error,
+    isLoading: searchLoading,
+    error: searchError,
     refetch,
   } = useQuery(["search", query], () => searchMovies(query), {
     enabled: Boolean(query),
+    select: (data) => {
+      return data.map((item) => {
+        let genres = [];
+        const cachedGenres = queryClient.getQueryData("genres");
+        const release_year = item.release_date.split("-")[0];
+        if (cachedGenres) {
+          genres = getGenreNamesFromIds(item, cachedGenres);
+        }
+
+        genres = getGenreNamesFromIds(item, genresData);
+        return { ...item, genres, release_year };
+      });
+    },
   });
-
-  const { data: freshGenres } = useGenres();
-
-  useEffect(() => {
-    if (queryClient.getQueryData("genres")) {
-      setGenresData(queryClient.getQueriesData("genres"));
-    }
-    setGenresData(freshGenres);
-  }, [freshGenres]);
 
   useEffect(() => {
     if (!query) {
@@ -35,45 +42,12 @@ export function useSearch(query) {
     }
   }, [query]);
 
-  if (searchData) {
-    const modifiedData = searchData.map(
-      ({
-        id,
-        title,
-        backdrop_path,
-        release_date,
-        poster_path,
-        genre_ids,
-        vote_average,
-        vote_count,
-        overview,
-      }) => {
-        const release_year = release_date?.split("-")[0];
-        const genres = [];
-
-        genre_ids.forEach((genreId) => {
-          const genreName = genresData
-            ?.map(({ id, name }) => id === genreId && name)
-            ?.filter(Boolean);
-
-          genres.push(genreName[0]);
-        });
-
-        return {
-          id,
-          title,
-          backdrop_path,
-          poster_path,
-          release_year,
-          vote_count,
-          vote_average,
-          overview,
-          genres,
-        };
-      }
-    );
-    data = [...modifiedData];
-  }
-
-  return { data, isLoading, error };
+  return {
+    data: searchData,
+    isLoading: searchLoading || genresLoading,
+    error: {
+      search: searchError ? searchError.message : null,
+      genres: genresError ? genresError.message : null,
+    },
+  };
 }

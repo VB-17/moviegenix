@@ -79,7 +79,7 @@ function MovieInfo({ movieId }) {
               </div>
               <p className="text-md text-gray-400 leading-7">{data.overview}</p>
               <div className="flex space-x-4">
-                {data.genres.map(({ name }, idx) => (
+                {data.genres.map((name, idx) => (
                   <p
                     key={idx}
                     className="text-sm py-1 px-4 rounded-full bg-dark-500 text-gray-300"
@@ -117,7 +117,7 @@ function MovieInfo({ movieId }) {
         <List title={"Recommended Movies"}>
           <QueryResult loading={isLoading} error={error} data={data}>
             {data &&
-              data?.recommended.map((item) => (
+              data.recommended?.map((item) => (
                 <ListItem key={item.id} item={item} variant="secondary" />
               ))}
           </QueryResult>

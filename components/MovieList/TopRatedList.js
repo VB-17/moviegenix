@@ -5,7 +5,9 @@ import List from "./List";
 import ListItem from "./ListItem";
 
 function TopRatedList() {
-  const { data, isLoading, error } = useTopRatedMovies();
+  const topRated = useTopRatedMovies();
+  const { data, isLoading, error } = topRated;
+
   return (
     <List
       title={"Top Rated"}
